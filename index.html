@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savannah Lakes Village — Interactive Master Plan</title>
+<meta name="description" content="Interactive master plan for Savannah Lakes Village on Lake Thurmond, McCormick County, South Carolina.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="rail">
+    <header class="brand">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" aria-label="Savannah Lakes Village">
+        <path d="M4 27c4.5 0 4.5-3 9-3s4.5 3 9 3 4.5-3 9-3 4.5 3 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4 33c4.5 0 4.5-3 9-3s4.5 3 9 3 4.5-3 9-3 4.5 3 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".45"/>
+        <path d="M20 4l9 11h-4v7H15v-7h-4L20 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <div class="brandtext">
+        <h1>Savannah Lakes Village</h1>
+        <p>Interactive Master Plan</p>
+      </div>
+    </header>
+
+    <div class="place">
+      <span class="dot"></span>
+      Lake Thurmond · McCormick County, SC
+    </div>
+
+    <div class="rail-scroll">
+      <section class="block">
+        <h2 class="ttl">Base map</h2>
+        <div class="segs" id="viewSegs">
+          <button class="seg is-on" data-view="aerial">Photoreal</button>
+          <button class="seg" data-view="illustrated">Illustrated</button>
+          <button class="seg" data-view="satellite">Satellite</button>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="ttl">Filter by category</h2>
+        <div class="legend" id="legend"></div>
+      </section>
+
+      <section class="block">
+        <h2 class="ttl">Locations <span class="count" id="vCount"></span></h2>
+        <nav class="vlist" id="vlist"></nav>
+      </section>
+
+      <section class="block portfolio" id="portfolio"></section>
+    </div>
+
+    <footer class="rail-foot">
+      Concept master plan · illustrative and subject to change
+    </footer>
+  </aside>
+
+  <!-- ============ MAP STAGE ============ -->
+  <main class="stage">
+    <div class="stage-bar">
+      <p class="mobrand">Savannah Lakes Village <span>Master Plan</span></p>
+      <p class="hint"><strong>Click any marker</strong> to open its graphics page</p>
+      <div class="zoomers">
+        <button id="zOut" aria-label="Zoom out">–</button>
+        <button id="zFit" aria-label="Fit to screen">Fit</button>
+        <button id="zIn" aria-label="Zoom in">+</button>
+      </div>
+    </div>
+
+    <div class="canvas" id="canvas">
+      <div class="mapwrap" id="mapwrap">
+        <img id="baseImg" src="assets/map/basemap.jpg" alt="Photorealistic aerial of the Savannah Lakes Village peninsula" draggable="false">
+        <div class="pins" id="pins"></div>
+      </div>
+      <div class="satwrap" id="satwrap"><div id="leaf"></div></div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ DETAIL PAGE ============ -->
+<div class="detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="dName">
+  <button class="dclose" id="dclose" aria-label="Back to map">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    <span>Back to map</span>
+  </button>
+
+  <div class="dscroll" id="dscroll">
+    <div class="dhero">
+      <img id="dHeroImg" alt="">
+      <div class="dhero-scrim"></div>
+      <div class="dhero-txt">
+        <span class="dchip" id="dChip"></span>
+        <h2 id="dName"></h2>
+        <p id="dTag"></p>
+      </div>
+    </div>
+
+    <div class="dbody">
+      <p class="dlede" id="dLede"></p>
+
+      <div class="dgrid">
+        <section class="dcol-main">
+          <h3 class="dh">Graphics</h3>
+          <div class="gallery" id="dGallery"></div>
+
+          <h3 class="dh" id="dNotesH">Plan notes</h3>
+          <ul class="notes" id="dNotes"></ul>
+        </section>
+
+        <aside class="dcol-side">
+          <div class="card">
+            <h3 class="dh">Key figures</h3>
+            <dl class="facts" id="dFacts"></dl>
+          </div>
+          <div class="card entity">
+            <h3 class="dh">Holding entity</h3>
+            <p id="dEntity"></p>
+          </div>
+          <div class="card">
+            <h3 class="dh">Elsewhere on the plan</h3>
+            <div class="jump" id="dJump"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb"><button class="lbx" id="lbx" aria-label="Close">×</button><img id="lbImg" alt=""><p id="lbCap"></p></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
