@@ -40,10 +40,10 @@
       <section class="block">
         <h2 class="ttl">View</h2>
         <div class="segs segs-col" id="viewSegs">
-          <button class="seg is-on" data-view="corridor">Full corridor</button>
-          <button class="seg" data-view="marina">Marina District</button>
-          <button class="seg" data-view="village">Village &amp; Wedding</button>
-          <button class="seg" data-view="illustrated">Illustrated</button>
+          <button class="seg on" data-view="overview">Whole site</button>
+          <button class="seg" data-view="peninsula">Peninsula &middot; 10.9 ac</button>
+          <button class="seg" data-view="band">Highway band &middot; 75 ac</button>
+          <button class="seg" data-view="illustrated">Illustrated plan</button>
           <button class="seg" data-view="satellite">Satellite</button>
         </div>
       </section>
@@ -54,9 +54,9 @@
       </section>
 
       <section class="block">
-        <h2 class="ttl">Measured site geometry</h2>
+        <h2 class="ttl">Site geometry</h2>
         <div id="geom"></div>
-        <p class="gsub">Measured from the owner-marked satellite boundary, scaled against surveyed addresses on Village Drive and Savannah Drive.</p>
+        <p class="gsub">Scaled to the two surveyed parcels: 10.9 acres on the peninsula and 75 acres along US-378.</p>
       </section>
 
       <section class="block">
@@ -77,7 +77,7 @@
     <div class="stage-bar">
       <p class="mobrand">Savannah Lakes Village <span>Master Plan</span></p>
       <div class="vhead">
-        <p class="vtitle" id="vTitle">The full corridor</p>
+        <p class="vtitle" id="vTitle">The whole site — 85.9 acres</p>
         <p class="vblurb" id="vBlurb"></p>
       </div>
       <div class="zoomers">
@@ -89,7 +89,7 @@
 
     <div class="canvas" id="canvas">
       <div class="mapwrap" id="mapwrap">
-        <img id="baseImg" src="assets/map/corridor.jpg" alt="Aerial view northeast up the full Savannah Lakes Village development corridor" draggable="false">
+        <img id="baseImg" src="assets/map/overview.jpg" alt="Aerial view of the full Savannah Lakes Village site: the 10.9-acre peninsula and the 75-acre band along US-378" draggable="false">
         <div class="pins" id="pins"></div>
       </div>
       <div class="satwrap" id="satwrap"><div id="leaf"></div></div>

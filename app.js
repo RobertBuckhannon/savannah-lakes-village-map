@@ -6,7 +6,7 @@
   const byId = {};
   D.venues.forEach(v => byId[v.id] = v);
   const off = new Set();           // hidden categories
-  let view = 'corridor';
+  let view = 'overview';
   let zoom = 1;
 
   const VIEWS = D.views;
@@ -108,7 +108,7 @@
       mapwrap.style.display = 'none';
       satwrap.classList.add('on');
       $('#vTitle').textContent = 'Real satellite imagery';
-      $('#vBlurb').textContent = 'Esri imagery of the actual parcel on Lake Thurmond. Master-plan markers live on the corridor and district views.';
+      $('#vBlurb').textContent = 'Esri imagery of the actual parcel on Lake Thurmond. Master-plan markers live on the site and parcel views.';
       initLeaf();
       return;
     }
@@ -123,12 +123,32 @@
     setTimeout(() => {
       baseImg.src = cfg.src;
       baseImg.alt = cfg.alt;
-      baseImg.onload = () => mapwrap.classList.remove('swapping');
+      baseImg.onload = () => { fitBase(); mapwrap.classList.remove('swapping'); };
       apply();
     }, 180);
   }
 
   /* ================= ZOOM / PAN ================= */
+
+  // --- explicitly fit the base image box so the pin layer always matches the photo ---
+  const fitBase = () => {
+    if (!baseImg.naturalWidth || mapwrap.style.display === 'none') return;
+    const canvas = $('#canvas');
+    const cs = getComputedStyle(canvas);
+    const availW = canvas.clientWidth  - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const availH = canvas.clientHeight - parseFloat(cs.paddingTop)  - parseFloat(cs.paddingBottom);
+    const ar = baseImg.naturalWidth / baseImg.naturalHeight;
+    const narrow = window.matchMedia('(max-width:1080px)').matches;
+    let w, h;
+    if (narrow) { w = availW; h = w / ar; }           // phones/tablets: fill width, page scrolls
+    else { w = Math.min(availW, availH * ar); h = w / ar; }  // desktop: contain
+    mapwrap.style.width = w + 'px';
+    mapwrap.style.height = h + 'px';
+  };
+  baseImg.addEventListener('load', fitBase);
+  window.addEventListener('resize', fitBase);
+  if (baseImg.complete) fitBase();
+
   const setZoom = z => {
     zoom = Math.min(3, Math.max(1, z));
     mapwrap.style.transform = `scale(${zoom})`;
@@ -263,7 +283,7 @@
   });
 
   /* initial view */
-  setView('corridor');
+  setView('overview');
 
   /* deep link on load */
   const start = location.hash.slice(1);

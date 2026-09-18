@@ -429,3 +429,15 @@ img{display:block;max-width:100%}
 @media (max-width:1080px){
   .stage{min-height:0}
 }
+
+/* the pin layer must match the rendered image box exactly, not the flex track */
+.mapwrap{width:-moz-fit-content;width:fit-content;height:-moz-fit-content;height:fit-content;
+  align-items:center;justify-content:center}
+@media (max-width:1080px){
+  .mapwrap{width:100%;height:auto}
+}
+
+/* base image box is sized by fitBase() in app.js; the img simply fills it */
+.mapwrap{max-width:none;max-height:none;display:block;overflow:hidden}
+.mapwrap img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill}
+@media (max-width:1080px){ .mapwrap{width:100%} }

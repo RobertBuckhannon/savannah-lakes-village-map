@@ -1,87 +1,123 @@
-/* ============================================================
-   Savannah Lakes Village — view system
-   Geometry corrected 2026-09-17 against the owner-outlined
-   satellite of the real corridor. The developable land is a
-   1.29 mi x 0.61 mi band running NE–SW along US-378; the lake
-   reaches only the SW end at the marina.
-   Pin coordinates are % of each base image's width / height.
-   ============================================================ */
+/* Savannah Lakes Village — view system
+   Scale is calibrated to the two surveyed parcels the owner confirmed:
+     - Peninsula + sales-center parcel .... 10.9 acres (~690 ft across)
+     - Highway band parcel ............... 75.0 acres (~2,600 ft x ~1,250 ft)
+   Total ~85.9 acres. Earlier drafts of this map overstated the site by ~6x.
+*/
+window.SVL = window.SVL || {};
 
 window.SVL.views = {
-  corridor: {
-    src: 'assets/map/corridor.jpg',
-    label: 'Corridor',
-    title: 'The full corridor',
-    blurb: '1.29 miles NE–SW along US-378 · ~360 acres. Water reaches the southwest end only. Labels appear on hover — open a district for detail.',
-    alt: 'Aerial view northeast up the full Savannah Lakes Village development corridor',
+  overview: {
+    src: 'assets/map/overview.jpg',
     dense: true,
+    label: 'Whole site',
+    title: 'The whole site — 85.9 acres',
+    blurb: 'Two parcels. The 10.9-acre peninsula holds the marina, the venues and the amphitheater; the 75-acre band along US-378 holds the wedding venues, the village and the cottages. US-378 crosses the causeway at the upper left.',
+    alt: 'Aerial view of the full Savannah Lakes Village site showing the small peninsula and the wooded band along US-378.'
   },
-  marina: {
-    src: 'assets/map/marina.jpg',
-    label: 'Marina District',
-    title: 'Marina District',
-    blurb: 'The southwest end — the only true lake frontage. The amphitheater sits in the existing graded bowl, stage at the low southwest end, seating rising northeast toward the parking pad.',
-    alt: 'Aerial view of the marina, amphitheater bowl, tiki bar and beach at the southwest end',
+  peninsula: {
+    src: 'assets/map/peninsula.jpg',
+    label: 'Peninsula · 10.9 ac',
+    title: 'The peninsula — 10.9 acres',
+    blurb: 'Water on three sides and only about 690 feet across. Everything here is within a five-minute walk: the covered slips, Dockside, the tiki bar, the beach, the greens, the amphitheater bowl and the welcome centre at the neck opposite the marina.',
+    alt: 'Aerial view of the 10.9-acre peninsula with marina slips, restaurant, tiki bar, beach and amphitheater bowl.'
   },
-  village: {
-    src: 'assets/map/village.jpg',
-    label: 'Village & Wedding',
-    title: 'Village & Wedding District',
-    blurb: 'The northeast end at the US-378 commercial node. Entirely inland — no lake frontage. Cottages spread deep across the ridge fingers.',
-    alt: 'Aerial view of the wedding barn, chapel, village center and cottages at the northeast end',
+  band: {
+    src: 'assets/map/band.jpg',
+    label: 'Highway band · 75 ac',
+    title: 'The highway band — 75 acres',
+    blurb: 'About 2,600 feet of US-378 frontage and roughly 1,250 feet deep. The wedding barn, garden and chapel sit near the highway; the village centre and townhomes step back; the cottages spread out sparsely through mature pine across the rest of the parcel.',
+    alt: 'Aerial view of the 75-acre band along US-378 with wedding barn, chapel, village centre, townhomes and cottages spread through pine woods.'
   },
   illustrated: {
     src: 'assets/map/illustrated.jpg',
-    label: 'Illustrated',
-    title: 'Illustrated plan',
-    blurb: 'The original schematic master plan. Diagrammatic — not to scale or true orientation.',
-    alt: 'Illustrated master plan of Savannah Lakes Village',
+    label: 'Illustrated plan',
+    title: 'The illustrated master plan',
+    blurb: 'The original hand-drawn plan. Its relative positions are the reference this map is built from — north is up, the causeway is at the upper left and the peninsula is at the bottom.',
+    alt: 'Illustrated hand-drawn master plan of Savannah Lakes Village.'
   },
+  satellite: {
+    src: '',
+    label: 'Satellite',
+    title: 'Satellite imagery',
+    blurb: 'Live imagery of the actual parcels on Lake Thurmond. Master-plan markers live on the site and parcel views.',
+    alt: 'Satellite imagery of the site.'
+  }
 };
 
-/* Which district zoom each venue belongs to */
+/* which parcel each venue belongs to */
 window.SVL.district = {
-  marina: 'marina', dockside: 'marina', tiki: 'marina',
-  amphitheater: 'marina', beach: 'marina',
-  wedding: 'village', chapel: 'village', 'village-center': 'village',
-  greens: 'village', townhomes: 'village', cottages: 'village',
-  'opportunity-center': 'village',
+  'marina': 'peninsula',
+  'dockside': 'peninsula',
+  'tiki': 'peninsula',
+  'beach': 'peninsula',
+  'greens': 'peninsula',
+  'amphitheater': 'peninsula',
+  'opportunity-center': 'peninsula',
+  'wedding': 'band',
+  'chapel': 'band',
+  'village-center': 'band',
+  'townhomes': 'band',
+  'cottages': 'band'
 };
 
-/* Pin placements per view */
+/* pin positions per view, in percent of image width/height — verified against each base image */
 window.SVL.placements = {
-  corridor: {
-    marina: [23.5, 90.5], dockside: [28.0, 80.0], tiki: [18.5, 84.5],
-    beach: [12.5, 88.0], amphitheater: [24.0, 72.5],
-    greens: [27.0, 62.0], townhomes: [26.5, 54.5], cottages: [41.5, 45.5],
-    'opportunity-center': [52.0, 36.0], 'village-center': [61.0, 24.5],
-    chapel: [71.0, 17.0], wedding: [80.0, 11.0],
+  overview: {
+    'wedding':            [81.0, 14.3],
+    'chapel':             [44.0, 19.7],
+    'village-center':     [63.1, 28.9],
+    'townhomes':          [41.7, 39.4],
+    'cottages':           [69.0, 52.0],
+    'opportunity-center': [32.4, 66.0],
+    'greens':             [44.0, 80.5],
+    'amphitheater':       [34.1, 77.2],
+    'marina':             [57.9, 77.2],
+    'tiki':               [38.5, 85.0],
+    'dockside':           [60.2, 87.2],
+    'beach':              [41.7, 89.5]
   },
-  marina: {
-    marina: [85.5, 32.0], dockside: [71.8, 42.5], amphitheater: [42.5, 45.5],
-    tiki: [28.5, 64.0], beach: [10.5, 38.5],
+  peninsula: {
+    'opportunity-center': [51.5, 11.9],
+    'marina':             [79.9, 32.0],
+    'greens':             [42.8, 41.7],
+    'dockside':           [78.7, 46.1],
+    'amphitheater':       [38.2, 54.3],
+    'tiki':               [42.2, 69.9],
+    'beach':              [48.6, 81.8]
   },
-  village: {
-    wedding: [21.9, 37.3], chapel: [39.3, 43.6], 'village-center': [52.7, 25.2],
-    greens: [53.5, 42.1], townhomes: [70.2, 50.5], cottages: [81.0, 69.5],
-    'opportunity-center': [13.4, 79.4],
+  band: {
+    'wedding':        [13.9, 42.0],
+    'chapel':         [31.3, 34.5],
+    'village-center': [54.1, 28.2],
+    'townhomes':      [70.8, 23.6],
+    'cottages':       [58.0, 72.0]
   },
   illustrated: {
-    marina: [72.5, 62.5], dockside: [72, 80], tiki: [41, 74.5],
-    amphitheater: [32, 50], wedding: [57, 19], chapel: [22.5, 28],
-    cottages: [72, 34], townhomes: [33, 41], 'village-center': [49, 30],
-    'opportunity-center': [61, 45], greens: [43.5, 62], beach: [44, 84],
-  },
+    'marina':             [72.5, 62.5],
+    'dockside':           [72.0, 80.0],
+    'tiki':               [41.0, 74.5],
+    'amphitheater':       [32.0, 50.0],
+    'wedding':            [57.0, 19.0],
+    'chapel':             [22.5, 28.0],
+    'cottages':           [72.0, 34.0],
+    'townhomes':          [33.0, 41.0],
+    'village-center':     [49.0, 30.0],
+    'opportunity-center': [61.0, 45.0],
+    'greens':             [43.5, 62.0],
+    'beach':              [44.0, 84.0]
+  }
 };
 
-/* Measured site facts, shown under the corridor view */
+/* measured / confirmed site geometry shown in the rail */
 window.SVL.geometry = [
-  ['Corridor length', '1.29 miles NE–SW'],
-  ['Corridor width', '0.61 miles'],
-  ['Area within boundary', '~360 acres'],
-  ['True lake frontage', 'Southwest end only'],
-  ['US-378 frontage', 'Full 1.29-mile west edge'],
-  ['Amphitheater bowl', '~415 ft × 485 ft, already graded'],
-  ['Bowl fall', 'High northeast → low southwest'],
-  ['Cart trail spine', 'Full corridor, spurs to every cluster'],
+  ['Total site', '85.9 acres, two parcels'],
+  ['Peninsula parcel', '10.9 acres, ~690 ft across'],
+  ['Highway band parcel', '75.0 acres'],
+  ['Band dimensions', '~2,600 ft × ~1,250 ft'],
+  ['US-378 frontage', '~0.49 mile'],
+  ['Peninsula water frontage', 'Three sides'],
+  ['Cottage density', '~4.5 keys/acre across 42 ac'],
+  ['Event parking', 'On the band — peninsula holds ~1.5 ac'],
+  ['Cart trail spine', 'Links both parcels, spurs to every cluster'],
 ];
