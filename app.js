@@ -6,13 +6,12 @@
   const byId = {};
   D.venues.forEach(v => byId[v.id] = v);
   const off = new Set();           // hidden categories
-  let view = 'aerial';
+  let view = 'corridor';
   let zoom = 1;
 
-  const BASES = {
-    aerial: { src: 'assets/map/basemap.jpg', alt: 'Photorealistic aerial of the Savannah Lakes Village peninsula' },
-    illustrated: { src: 'assets/map/illustrated.jpg', alt: 'Illustrated master plan of the Savannah Lakes Village peninsula' },
-  };
+  const VIEWS = D.views;
+  const PLACE = D.placements;
+  const inView = (id, v = view) => !!(PLACE[v] && PLACE[v][id]);
 
   /* ================= LEGEND ================= */
   const legend = $('#legend');
@@ -33,8 +32,6 @@
     const c = D.categories[v.cat];
 
     const p = el('button', 'pin');
-    p.style.left = v.x + '%';
-    p.style.top = v.y + '%';
     p.style.color = c.color;
     p.dataset.id = v.id;
     p.setAttribute('aria-label', `Open ${v.name}`);
@@ -66,15 +63,21 @@
 
   function apply() {
     let n = 0;
+    const place = PLACE[view] || {};
     D.venues.forEach(v => {
-      const hidden = off.has(v.cat);
-      if (!hidden) n++;
-      pins.querySelector(`.pin[data-id="${v.id}"]`).classList.toggle('gone', hidden);
-      vlist.querySelector(`.vi[data-id="${v.id}"]`).classList.toggle('hide', hidden);
+      const catOff = off.has(v.cat);
+      if (!catOff) n++;
+      const pos = place[v.id];
+      const p = pins.querySelector(`.pin[data-id="${v.id}"]`);
+      if (pos) { p.style.left = pos[0] + '%'; p.style.top = pos[1] + '%'; }
+      p.classList.toggle('gone', catOff || !pos);
+      const li = vlist.querySelector(`.vi[data-id="${v.id}"]`);
+      li.classList.toggle('hide', catOff);
+      li.classList.toggle('elsewhere', !catOff && !pos);
     });
+    pins.classList.toggle('dense', !!(VIEWS[view] && VIEWS[view].dense));
     $('#vCount').textContent = `(${n})`;
   }
-  apply();
 
   /* ================= PORTFOLIO ================= */
   const pf = $('#portfolio');
@@ -91,29 +94,38 @@
   /* ================= BASE MAP SWITCH ================= */
   const mapwrap = $('#mapwrap'), satwrap = $('#satwrap'), baseImg = $('#baseImg');
   $('#viewSegs').querySelectorAll('.seg').forEach(b => {
-    b.onclick = () => {
-      $('#viewSegs').querySelectorAll('.seg').forEach(x => x.classList.remove('is-on'));
-      b.classList.add('is-on');
-      setView(b.dataset.view);
-    };
+    b.onclick = () => setView(b.dataset.view);
   });
 
+  const gm = $('#geom');
+  if (gm && D.geometry) D.geometry.forEach(([k, v]) =>
+    gm.appendChild(el('div', 'pr', `<span>${k}</span><span>${v}</span>`)));
+
   function setView(v) {
-    view = v;
+    $('#viewSegs').querySelectorAll('.seg').forEach(x =>
+      x.classList.toggle('is-on', x.dataset.view === v));
     if (v === 'satellite') {
       mapwrap.style.display = 'none';
       satwrap.classList.add('on');
+      $('#vTitle').textContent = 'Real satellite imagery';
+      $('#vBlurb').textContent = 'Esri imagery of the actual parcel on Lake Thurmond. Master-plan markers live on the corridor and district views.';
       initLeaf();
       return;
     }
+    view = v;
+    const cfg = VIEWS[v];
     satwrap.classList.remove('on');
     mapwrap.style.display = '';
+    $('#vTitle').textContent = cfg.title;
+    $('#vBlurb').textContent = cfg.blurb;
     mapwrap.classList.add('swapping');
+    setZoom(1); $('#canvas').scrollTo(0, 0);
     setTimeout(() => {
-      baseImg.src = BASES[v].src;
-      baseImg.alt = BASES[v].alt;
+      baseImg.src = cfg.src;
+      baseImg.alt = cfg.alt;
       baseImg.onload = () => mapwrap.classList.remove('swapping');
-    }, 200);
+      apply();
+    }, 180);
   }
 
   /* ================= ZOOM / PAN ================= */
@@ -170,6 +182,9 @@
     const v = byId[id];
     if (!v) return;
     const c = D.categories[v.cat];
+
+    const dist = D.district && D.district[id];
+    if (dist && !inView(id)) setView(dist);
 
     $('#dChip').textContent = c.label;
     $('#dChip').style.background = c.color;
@@ -246,6 +261,9 @@
     if ($('#lb').classList.contains('on')) closeLb();
     else if (detail.classList.contains('on')) close();
   });
+
+  /* initial view */
+  setView('corridor');
 
   /* deep link on load */
   const start = location.hash.slice(1);

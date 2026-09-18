@@ -38,9 +38,11 @@
 
     <div class="rail-scroll">
       <section class="block">
-        <h2 class="ttl">Base map</h2>
-        <div class="segs" id="viewSegs">
-          <button class="seg is-on" data-view="aerial">Photoreal</button>
+        <h2 class="ttl">View</h2>
+        <div class="segs segs-col" id="viewSegs">
+          <button class="seg is-on" data-view="corridor">Full corridor</button>
+          <button class="seg" data-view="marina">Marina District</button>
+          <button class="seg" data-view="village">Village &amp; Wedding</button>
           <button class="seg" data-view="illustrated">Illustrated</button>
           <button class="seg" data-view="satellite">Satellite</button>
         </div>
@@ -49,6 +51,12 @@
       <section class="block">
         <h2 class="ttl">Filter by category</h2>
         <div class="legend" id="legend"></div>
+      </section>
+
+      <section class="block">
+        <h2 class="ttl">Measured site geometry</h2>
+        <div id="geom"></div>
+        <p class="gsub">Measured from the owner-marked satellite boundary, scaled against surveyed addresses on Village Drive and Savannah Drive.</p>
       </section>
 
       <section class="block">
@@ -68,7 +76,10 @@
   <main class="stage">
     <div class="stage-bar">
       <p class="mobrand">Savannah Lakes Village <span>Master Plan</span></p>
-      <p class="hint"><strong>Click any marker</strong> to open its graphics page</p>
+      <div class="vhead">
+        <p class="vtitle" id="vTitle">The full corridor</p>
+        <p class="vblurb" id="vBlurb"></p>
+      </div>
       <div class="zoomers">
         <button id="zOut" aria-label="Zoom out">–</button>
         <button id="zFit" aria-label="Fit to screen">Fit</button>
@@ -78,7 +89,7 @@
 
     <div class="canvas" id="canvas">
       <div class="mapwrap" id="mapwrap">
-        <img id="baseImg" src="assets/map/basemap.jpg" alt="Photorealistic aerial of the Savannah Lakes Village peninsula" draggable="false">
+        <img id="baseImg" src="assets/map/corridor.jpg" alt="Aerial view northeast up the full Savannah Lakes Village development corridor" draggable="false">
         <div class="pins" id="pins"></div>
       </div>
       <div class="satwrap" id="satwrap"><div id="leaf"></div></div>
@@ -140,6 +151,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="data.js"></script>
+<script src="views.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
